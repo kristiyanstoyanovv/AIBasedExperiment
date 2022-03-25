@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class Queen {
 
+    public static final String queenSymbol = "Q";
+
     private int [] currentPosition = new int[2];
     private ArrayList<Point> possibleMoves;
     private int hittableQueens;
-
-    public static final String queenSymbol = "Q";
 
     public Queen(int xPos, int yPos) {
         currentPosition[0] = xPos;

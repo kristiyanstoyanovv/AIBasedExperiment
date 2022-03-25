@@ -1,77 +1,37 @@
 package com.Kris;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class Board {
-    private final String[][] gameBoard;
-    private final int boardWidth;
-    private final int boardHeight;
-    private String queenPosAsString;
-    private Queen[] Queens;
-    private int sumOfAllHittablePositions;
+
+    protected static final int BOARD_WIDTH = 8;
+    protected static final int BOARD_HEIGHT = 8;
+    protected static final int QUEEN_COUNT = 8;
+
+    protected String[][] gameBoard;
+    protected Queen[] Queens;
+
+    protected String queensPosAsString;
+    protected int sumOfAllHittablePositions;
 
     public Board() {
-        this.boardWidth = 8;
-        this.boardHeight = 8;
-        gameBoard = new String[boardWidth][boardHeight];
-        generateBoard();
-        analyzeBoard();
+        gameBoard = new String[BOARD_WIDTH][BOARD_HEIGHT];
+        Queens = new Queen[QUEEN_COUNT];
     }
 
-    public Board(String queenPositions) {
-        if (queenPositions.length() > 8) {
-            gameBoard = null;
-            boardWidth = -1;
-            boardHeight = -1;
-            return;
-        }
-        this.boardWidth = 8;
-        this.boardHeight = 8;
-        gameBoard = new String[boardWidth][boardHeight];
-        for (int i = 0; i < boardWidth; i++) {
-            for (int x = 0; x < boardHeight; x++) {
+    protected void generateBoard() {
+        for (int i = 0; i < BOARD_WIDTH; i++) {
+            for (int x = 0; x < BOARD_HEIGHT; x++) {
                 gameBoard[i][x] = "_";
             }
         }
-        Queens = new Queen[boardWidth];
-        for (int i = 0; i < queenPositions.length(); i++) {
-            int temp = Character.getNumericValue(queenPositions.charAt(i));
-            gameBoard[temp][i] = "Q";
-            Queens[i] = new Queen(temp,i);
-        }
-        analyzeBoard();
-    }
-
-    public String[][] getBoard() {
-        return gameBoard;
-    }
-
-    public void generateBoard() {
-        for (int i = 0; i < boardWidth; i++) {
-            for (int x = 0; x < boardHeight; x++) {
-                gameBoard[i][x] = "_";
-            }
-        }
-        Queens = new Queen[boardWidth];
-        generateQueens();
-    }
-
-    private void generateQueens() {
-        queenPosAsString = "";
-        for (int i = 0; i < boardWidth; i++) {
-            int queenRandomPosition = Utility.generateRandomNumber(0,7);
-            Queens[i] = new Queen(queenRandomPosition, i);
-            queenPosAsString += queenRandomPosition;
-            gameBoard[queenRandomPosition][i] = Queen.queenSymbol;
-        }
-        System.out.println(queenPosAsString);
     }
 
     public void displayBoard() {
         System.out.println(" \t0\t1\t2\t3\t4\t5\t6\t7");
-        for (int i = 0; i < boardWidth; i++) {
+        for (int i = 0; i < BOARD_WIDTH; i++) {
             System.out.print(i + "\t");
-            for (int x = 0; x < boardHeight; x++) {
+            for (int x = 0; x < BOARD_HEIGHT; x++) {
                 System.out.print(gameBoard[i][x] + "\t");
             }
             System.out.println();
@@ -83,7 +43,7 @@ public class Board {
         countHittableQueens();
     }
 
-    public void countHittableQueens() {
+    private void countHittableQueens() {
         for (int i = 0; i < Queens.length; i++) {
             //System.out.print("Queen " + i);
             int temp = 0;
@@ -97,33 +57,33 @@ public class Board {
         System.out.println(sumOfAllHittablePositions);
     }
 
-    public void findPossibleMoves() {
+    private void findPossibleMoves() {
         Point tempPoint = new Point();
         for (Queen tempQueen : Queens) {
             int queenXPos = tempQueen.getCurrentPosition()[0];
             int queenYPos = tempQueen.getCurrentPosition()[1];
             for (int i = 1; i < 8; i++) {
                 tempPoint.move(queenXPos + i, queenYPos);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos, queenYPos + i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos - i, queenYPos);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos, queenYPos - i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos + i, queenYPos + i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos - i, queenYPos - i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos + i, queenYPos - i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
                 tempPoint.move(queenXPos - i, queenYPos + i);
-                if (Board.isValidCoordinate(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
+                if (Board.isCoordinateValid(tempPoint)) tempQueen.getPossibleMoves().add(new Point(tempPoint));
             }
         }
     }
 
-    public static boolean isValidCoordinate(Point coordinate) {
+    public static boolean isCoordinateValid(Point coordinate) {
         return coordinate.x >= 0 && coordinate.x <= 7 && coordinate.y >= 0 && coordinate.y <= 7;
     }
 
