@@ -7,6 +7,7 @@ public class StringBoard extends Board {
         generateBoard();
         this.queensPosAsString = queensPositions;
         setupQueensByString(queensPositions);
+        analyzeBoard();
     }
 
     public void setupQueensByString(String queenPositions) {

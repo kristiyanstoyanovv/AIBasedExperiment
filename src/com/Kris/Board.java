@@ -12,6 +12,7 @@ public class Board {
     protected Queen[] Queens;
 
     protected String queensPosAsString;
+
     protected int sumOfAllHittablePositions;
 
     public Board() {
@@ -38,23 +39,31 @@ public class Board {
         }
     }
 
+    public int getSumOfAllHittablePositions() {
+        return sumOfAllHittablePositions;
+    }
+
     public void analyzeBoard() {
         findPossibleMoves();
         countHittableQueens();
     }
 
+    public String getQueensPosAsString() {
+        return queensPosAsString;
+    }
+
     private void countHittableQueens() {
-        for (int i = 0; i < Queens.length; i++) {
+        for (Queen queen : Queens) {
             //System.out.print("Queen " + i);
             int temp = 0;
-            for (Point p : Queens[i].getPossibleMoves()) {
+            for (Point p : queen.getPossibleMoves()) {
                 if (gameBoard[p.x][p.y].equals("Q")) temp++;
             }
             //System.out.print(": "+temp+"\n");
-            Queens[i].setHittableQueens(temp);
+            queen.setHittableQueens(temp);
             sumOfAllHittablePositions += temp;
         }
-        System.out.println(sumOfAllHittablePositions);
+        //System.out.println(sumOfAllHittablePositions);
     }
 
     private void findPossibleMoves() {

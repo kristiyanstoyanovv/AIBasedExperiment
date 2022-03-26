@@ -19,11 +19,11 @@ public class GeneratedBoard extends Board {
     private void generateQueens() {
         queensPosAsString = "";
         for (int i = 0; i < BOARD_WIDTH; i++) {
-            int queenRandomPosition = Utility.generateRandomNumber(0,7);
+            int queenRandomPosition = Utility.generateRandomInteger(0,7);
             Queens[i] = new Queen(queenRandomPosition, i);
             queensPosAsString += queenRandomPosition;
             gameBoard[queenRandomPosition][i] = Queen.queenSymbol;
         }
-        System.out.println(queensPosAsString);
+        //System.out.println(queensPosAsString);
     }
 }
