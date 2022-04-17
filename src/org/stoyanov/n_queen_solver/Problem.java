@@ -1,4 +1,4 @@
-package com.Kris;
+package org.stoyanov.n_queen_solver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,33 +8,30 @@ import java.util.List;
 public class Problem {
 
     private List<Board> populationBoards = new ArrayList<>();
-    private final static int POPULATION_SIZE = 150;
+    private int populationSize;
+    private int boardSize;
 
-    public void solveProblem() {
 
-        while (true) {
-            generateBoards(POPULATION_SIZE);
-            sortPopulation();
-
-            while(true) {
-                for (Board board : populationBoards) {
-                    if (board.getSumOfAllHittablePositions() == 0) {
-                        solutionFound();
-                        return;
-                    }
-                }
-                populationBoards = crossOverFunction();
-                sortPopulation();
-                System.out.println("Population size: " + populationBoards.size());
-            }
-        }
+    public Problem (int populationSize, int boardSize) {
+        this.populationSize = populationSize;
+        this.boardSize = boardSize;
+        generateBoards();
     }
 
-    public void solutionFound() {
-        populationBoards.get(0).displayBoard();
-        System.out.println(populationBoards.get(0).getSumOfAllHittablePositions());
-        System.out.println(populationBoards.get(0).queensPosAsString);
-        System.out.println();
+    public Board getBestBoard() {
+        return populationBoards.get(0);
+    }
+
+    public boolean solveProblem() {
+
+        if (populationBoards.get(0).sumOfAllHittablePositions == 0) {
+            populationBoards.get(0).displayBoard();
+            return true;
+        }
+        System.out.println("Population size: " + populationSize);
+        populationBoards = crossOverFunction();
+        sortPopulation();
+        return false;
     }
 
     public void sortPopulation() {
@@ -53,9 +50,10 @@ public class Problem {
 
 
     public Board fitnessFunction() {
+        double maxHitsCount = boardSize * (boardSize-1);
         while (true) {
             for (Board board : populationBoards) {
-                if (Utility.generateRandomDouble() > (double) board.getSumOfAllHittablePositions() / 56) {
+                if (Utility.generateRandomDouble() > (double) board.getSumOfAllHittablePositions() / maxHitsCount) {
                     return board;
                 }
             }
@@ -65,31 +63,38 @@ public class Problem {
     public ArrayList<Board> crossOverFunction() {
         ArrayList<Board> nextGenPopulation = new ArrayList();
         for(int i = 0; i < populationBoards.size(); i+=2) {
-            int randomNumber = Utility.generateRandomInteger(0, 8);
+            int randomNumber = Utility.generateRandomInteger(0, boardSize);
             String parentXS = fitnessFunction().getQueensPosAsString();
             String parentYS = fitnessFunction().getQueensPosAsString();
             String childX = parentXS.substring(0, randomNumber) +
                     parentYS.substring(randomNumber);
             String childY = parentYS.substring(0, randomNumber) +
                     parentXS.substring(randomNumber);
+            if (Utility.generateRandomDouble() <= 0.8) {
                 nextGenPopulation.add(new StringBoard(mutateChild(childX)));
                 nextGenPopulation.add(new StringBoard(mutateChild(childY)));
+            } else {
+                nextGenPopulation.add(new StringBoard(childX));
+                nextGenPopulation.add(new StringBoard(childY));
+            }
         }
         return nextGenPopulation;
     }
 
     public String mutateChild(String child) {
         StringBuilder mutatedChild = new StringBuilder(child);
-        mutatedChild.setCharAt(Utility.generateRandomInteger(0,8),(char)(Utility.generateRandomInteger(0,8)+'0'));
+        mutatedChild.setCharAt(Utility.generateRandomInteger(0,boardSize),
+                        (char)(Utility.generateRandomInteger(0,boardSize)+'0'));
         return mutatedChild.toString();
     }
 
 
-    public void generateBoards(int boardsCount) {
-        for (int i = 0; i < boardsCount; i++) {
-            populationBoards.add(new GeneratedBoard());
+    public void generateBoards() {
+        for (int i = 0; i < populationSize; i++) {
+            populationBoards.add(new GeneratedBoard(boardSize));
             populationBoards.get(i).analyzeBoard();
         }
+        sortPopulation();
     }
 
 

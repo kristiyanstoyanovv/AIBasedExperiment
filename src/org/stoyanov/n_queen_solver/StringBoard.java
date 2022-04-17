@@ -1,9 +1,9 @@
-package com.Kris;
+package org.stoyanov.n_queen_solver;
 
 public class StringBoard extends Board {
 
     public StringBoard(String queensPositions) {
-        super();
+        super(queensPositions.length());
         generateBoard();
         this.queensPosAsString = queensPositions;
         setupQueensByString(queensPositions);

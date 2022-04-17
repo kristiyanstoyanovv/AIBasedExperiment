@@ -1,4 +1,4 @@
-package com.Kris;
+package org.stoyanov.n_queen_solver;
 
 import java.util.Random;
 

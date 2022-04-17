@@ -1,15 +1,15 @@
-package com.Kris;
+package org.stoyanov.n_queen_solver;
 
 public class GeneratedBoard extends Board {
-    public GeneratedBoard() {
-        super();
+    public GeneratedBoard(int boardSize) {
+        super(boardSize);
         generateBoard();
     }
 
     @Override
     public void generateBoard() {
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            for (int x = 0; x < BOARD_HEIGHT; x++) {
+        for (int i = 0; i < boardSize; i++) {
+            for (int x = 0; x < boardSize; x++) {
                 gameBoard[i][x] = "_";
             }
         }
@@ -18,8 +18,8 @@ public class GeneratedBoard extends Board {
 
     private void generateQueens() {
         queensPosAsString = "";
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            int queenRandomPosition = Utility.generateRandomInteger(0,7);
+        for (int i = 0; i < boardSize; i++) {
+            int queenRandomPosition = Utility.generateRandomInteger(0,boardSize-1);
             Queens[i] = new Queen(queenRandomPosition, i);
             queensPosAsString += queenRandomPosition;
             gameBoard[queenRandomPosition][i] = Queen.queenSymbol;
