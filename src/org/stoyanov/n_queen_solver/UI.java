@@ -109,6 +109,7 @@ public class UI extends JFrame {
     }
 
     private void initializeUpdateTimer(int updateDelay) {
+        generatedPopulation = 0;
         taskPerformer = evt -> {
             chessboardForm.hideAllQueens();
             generatedPopulation++;
@@ -117,6 +118,7 @@ public class UI extends JFrame {
                 ((Timer) evt.getSource()).stop();
                 JOptionPane.showMessageDialog(this,
                         "Solution found at generation number:  " + generatedPopulation);
+                return;
             }
         };
         timer = new Timer(updateDelay,taskPerformer);
