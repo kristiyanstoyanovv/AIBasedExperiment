@@ -95,13 +95,17 @@ public class UI extends JFrame {
         stopButton.setPreferredSize(new Dimension(70,25));
 
         startButton.addActionListener(e -> {
+            if (timer != null) return;
             if (initializeChessboard()) {
                 timer.start();
             }
         });
 
         stopButton.addActionListener(e -> {
-            if (timer != null) timer.stop();
+            if (timer != null)  {
+                timer.stop();
+                timer = null;
+            }
         });
 
         subPanel[2].add(startButton);
@@ -118,7 +122,7 @@ public class UI extends JFrame {
                 ((Timer) evt.getSource()).stop();
                 JOptionPane.showMessageDialog(this,
                         "Solution found at generation number:  " + generatedPopulation);
-                return;
+                timer = null;
             }
         };
         timer = new Timer(updateDelay,taskPerformer);
